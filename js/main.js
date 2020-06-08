@@ -1,7 +1,6 @@
 'use strict';
 
 var MAX_AMOUNT = 25;
-var commentAmount = Math.floor(Math.random() * 10 + 1);
 
 var messages = [
   'Всё отлично!',
@@ -11,7 +10,6 @@ var messages = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-
 var names = ['Анатолий', 'Игорь', 'Ангелина', 'Элеонора', 'Крош', 'Капитан Отчаяние'];
 
 var comment;
@@ -27,7 +25,7 @@ var getRandomIntenger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var renderComments = function () {
+var renderComment = function () {
   comment = {
     avatar: 'img/avatar-' + getRandomIntenger(1, 6) + '.svg',
     message: messages[getRandomIntenger(0, messages.length - 1)],
@@ -36,9 +34,10 @@ var renderComments = function () {
   return comment;
 };
 
+var commentAmount = getRandomIntenger(5, 10);
 var createComments = function () {
   for (var i = 0; i < commentAmount; i++) {
-    renderComments(i);
+    renderComment(i);
     comments[i] = comment;
   }
 };
@@ -71,11 +70,64 @@ var renderPicture = function (photo) {
 var createPictures = function () {
   createData();
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < photoDescriptions.length; i++) {
-    fragment.appendChild(renderPicture(photoDescriptions[i]));
-  }
 
+  photoDescriptions.forEach(function (it) {
+    fragment.appendChild(renderPicture(it));
+  });
   picturesList.appendChild(fragment);
 };
 
 createPictures();
+
+/* module3-task3 */
+
+var bigPicture = document.querySelector('.big-picture');
+var commentsList = bigPicture.querySelector('.social__comments');
+var commentTemplate = document.querySelector('#comment').
+                      content.querySelector('.social__comment');
+var commentExamples = commentsList.querySelectorAll('.social__comment');
+
+
+/* Показываем большое фото и вставляем информацию из 1-го элемента массива с данными*/
+bigPicture.classList.remove('hidden');
+
+bigPicture.querySelector('.likes-count').textContent = photoDescriptions[0].likes;
+bigPicture.querySelector('.big-picture__img img').src = photoDescriptions[0].url;
+bigPicture.querySelector('.big-picture__img img').alt = ' ';
+bigPicture.querySelector('.social__caption').textContent = photoDescriptions[0].description;
+bigPicture.querySelector('.comments-count').textContent = photoDescriptions[0].comments.length;
+
+/* Удаляем комментарии по умолчанию */
+commentExamples.forEach(function (it) {
+  it.remove();
+});
+
+/* Функция рендеринга комменария */
+var renderSocialComment = function (usersComment) {
+  var socialComment = commentTemplate.cloneNode(true);
+
+  socialComment.querySelector('.social__picture').src = usersComment.avatar;
+  socialComment.querySelector('.social__picture').alt = usersComment.name;
+  socialComment.querySelector('.social__text').textContent = usersComment.message;
+
+  return socialComment;
+};
+
+/* Отрисовываем коммнтарии в зависимоти от их количества */
+var createSocialComment = function () {
+  var fragment = document.createDocumentFragment();
+
+  photoDescriptions[0].comments.forEach(function (it) {
+    fragment.appendChild(renderSocialComment(it));
+  });
+  commentsList.appendChild(fragment);
+};
+
+createSocialComment();
+
+/* Прячем блоки счётчика комментариев и загрузки новых комментариев */
+bigPicture.querySelector('.social__comment-count').classList.add('hidden');
+bigPicture.querySelector('.comments-loader').classList.add('hidden');
+
+/* Добавляем body класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле */
+document.querySelector('body').classList.add('modal-open');
