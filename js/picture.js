@@ -14,8 +14,6 @@
   /* Показываем большое фото и вставляем информацию из 1-го элемента массива с данными*/
   /* bigPicture.classList.remove('hidden');*/ /* temp */
 
-  console.log(window.data.photoDescriptions[0]);
-
   bigPicture.querySelector('.likes-count').textContent = window.data.photoDescriptions[0].likes;
   bigPicture.querySelector('.big-picture__img img').src = window.data.photoDescriptions[0].url;
   bigPicture.querySelector('.big-picture__img img').alt = ' ';
