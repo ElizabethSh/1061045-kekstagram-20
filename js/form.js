@@ -3,8 +3,7 @@
 (function () {
 
   var loading = document.querySelector('#upload-file');
-  var imageUpload = document.querySelector('.img-upload__overlay');
-  var imageUploadCancel = imageUpload.querySelector('.img-upload__cancel');
+  var imageUploadCancel = document.querySelector('.img-upload__cancel');
 
   var onDocumentEscPress = function (evt) {
     window.util.isEscapeEvent(evt, function () {
@@ -16,7 +15,8 @@
   // открытие окна загрузки
 
   var openUploadFile = function () {
-    imageUpload.classList.remove('hidden');
+    window.preview.imageUpload.classList.remove('hidden');
+    window.preview.slider.classList.add('hidden');
     document.querySelector('body').classList.add('modal-open');
 
     document.addEventListener('keydown', onDocumentEscPress);
@@ -33,7 +33,7 @@
   // закрытие окна загрузки
 
   var closeUploadFile = function () {
-    imageUpload.classList.add('hidden');
+    window.preview.imageUpload.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');
     loading.value = '';
 
@@ -46,34 +46,10 @@
     closeUploadFile();
   };
 
-  // применение эффекта для изображения
-
-  var effectLevelPin = imageUpload.querySelector('.effect-level__pin');
-  var effectLevelValue = imageUpload.querySelector('.effect-level__value');
-  var effectLevel;
-
-  effectLevelPin.addEventListener('mouseup', function () {
-    effectLevel = Math.floor(effectLevelPin.offsetLeft / effectLevelPin.offsetParent.offsetWidth * 100); // уровень эффекта px/ длина полосы прокрутки пина px* 100
-    effectLevelValue.value = effectLevel;
-  });
-
-
-  var effectsList = imageUpload.querySelector('.effects__list');
-  var imageUploadPreview = imageUpload.querySelector('.img-upload__preview img');
-
-  effectsList.addEventListener('click', function (evt) {
-    if (evt.target && evt.target.matches('input[type="radio"]')) {
-      imageUploadPreview.className = '';
-      var className = 'effects__preview--' + evt.target.value;
-      imageUploadPreview.classList.add(className);
-      effectLevelValue.value = 100; /* нужно ли устанавливать 100% */
-    }
-  });
-
   // Валидация хеш-тегов
   var MAX_HASHTAG_LENGTH = 20;
 
-  var hashtagInput = imageUpload.querySelector('.text__hashtags');
+  var hashtagInput = window.preview.imageUpload.querySelector('.text__hashtags');
   var form = document.querySelector('.img-upload__form');
   var re = /^#[A-Za-zА-Яа-я0-9]*\s*$/; // доработать чтобы не ругался на пробел
 
