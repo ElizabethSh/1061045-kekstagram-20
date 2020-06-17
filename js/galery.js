@@ -13,16 +13,20 @@
     return picture;
   };
 
-  var createPictures = function () {
-    window.data.create();
+  var successHandler = function (photos) {
     var fragment = document.createDocumentFragment();
 
-    window.data.photoDescriptions.forEach(function (it) {
+    photos.forEach(function (it) {
       fragment.appendChild(renderPicture(it));
     });
+
     picturesList.appendChild(fragment);
   };
 
-  createPictures();
+  var errorHandler = function () {
+    console.log('Error');
+  };
+
+  window.backend.load(successHandler, errorHandler);
 
 })();
