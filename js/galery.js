@@ -1,9 +1,13 @@
 'use strict';
 
 (function () {
-  var picturesList = document.querySelector('.pictures'); // повтор!
+  var picturesList = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').
                       content.querySelector('.picture');
+
+  var errorTemplate = document.querySelector('#error').
+                      content.querySelector('section');
+  var main = document.querySelector('main');
 
   var renderPicture = function (photo) {
     var picture = pictureTemplate.cloneNode(true);
@@ -13,16 +17,24 @@
     return picture;
   };
 
-  var createPictures = function () {
-    window.data.create();
+  var successHandler = function (photos) {
     var fragment = document.createDocumentFragment();
 
-    window.data.photoDescriptions.forEach(function (it) {
+    photos.forEach(function (it) {
       fragment.appendChild(renderPicture(it));
     });
+
     picturesList.appendChild(fragment);
   };
 
-  createPictures();
+  var errorLoadHandler = function () {
+    var errorMessage = errorTemplate.cloneNode(true);
+    errorMessage.querySelector('.error__title').textContent = 'Ошибка загрузки данных';
+    errorMessage.querySelector('.error__button').textContent = 'Попробовать снова';
+
+    main.appendChild(errorMessage);
+  };
+
+  window.backend.load(successHandler, errorLoadHandler);
 
 })();
