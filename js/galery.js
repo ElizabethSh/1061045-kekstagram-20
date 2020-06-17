@@ -1,9 +1,13 @@
 'use strict';
 
 (function () {
-  var picturesList = document.querySelector('.pictures'); // повтор!
+  var picturesList = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').
                       content.querySelector('.picture');
+
+  var errorTemplate = document.querySelector('#error').
+                      content.querySelector('section');
+  var main = document.querySelector('main');
 
   var renderPicture = function (photo) {
     var picture = pictureTemplate.cloneNode(true);
@@ -23,10 +27,14 @@
     picturesList.appendChild(fragment);
   };
 
-  var errorHandler = function () {
-    console.log('Error');
+  var errorLoadHandler = function () {
+    var errorMessage = errorTemplate.cloneNode(true);
+    errorMessage.querySelector('.error__title').textContent = 'Ошибка загрузки данных';
+    errorMessage.querySelector('.error__button').textContent = 'Попробовать снова';
+
+    main.appendChild(errorMessage);
   };
 
-  window.backend.load(successHandler, errorHandler);
+  window.backend.load(successHandler, errorLoadHandler);
 
 })();
