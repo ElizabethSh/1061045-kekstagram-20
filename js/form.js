@@ -2,8 +2,14 @@
 
 (function () {
 
+  var MAX_HASHTAG_LENGTH = 20;
+
+  var hashtagInput = window.preview.imageUpload.querySelector('.text__hashtags');
+  var form = document.querySelector('.img-upload__form');
   var loading = document.querySelector('#upload-file');
   var imageUploadCancel = document.querySelector('.img-upload__cancel');
+
+  // открытие окна загрузки
 
   var onDocumentEscPress = function (evt) {
     window.util.isEscapeEvent(evt, function () {
@@ -11,8 +17,6 @@
       closeUploadFile();
     });
   };
-
-  // открытие окна загрузки
 
   var openUploadFile = function () {
     window.preview.imageUpload.classList.remove('hidden');
@@ -47,10 +51,6 @@
   };
 
   // Валидация хеш-тегов
-  var MAX_HASHTAG_LENGTH = 20;
-
-  var hashtagInput = window.preview.imageUpload.querySelector('.text__hashtags');
-  var form = document.querySelector('.img-upload__form');
   var re = /^#[A-Za-zА-Яа-я0-9]*\s*$/; // доработать чтобы не ругался на пробел
 
   var validateHashtag = function () {
@@ -91,10 +91,19 @@
   hashtagInput.addEventListener('keydown', onHashtagFieldEscPress);
 
   // не работает как нужно!
-  form.addEventListener('summit', function (evt) {
-    if (!hashtagInput.validity.valid) {
-      evt.preventDefault();
-    }
+  var errorHandler = function () {
+
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(form), function () {
+      closeUploadFile();
+    }, errorHandler);
+    evt.preventDefault();
+    // if (!hashtagInput.validity.valid) {
+    //   evt.preventDefault();
+    // }
   });
+
 
 })();
