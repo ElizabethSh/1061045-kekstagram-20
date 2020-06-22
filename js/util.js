@@ -7,8 +7,15 @@
     }
   };
 
+  var isEnterEvent = function (evt, action) {
+    if (evt.key === 'Enter') {
+      action();
+    }
+  };
+
   window.util = {
-    isEscapeEvent: isEscapeEvent
+    isEscapeEvent: isEscapeEvent,
+    isEnterEvent: isEnterEvent
   };
 
 })();
