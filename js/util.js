@@ -13,9 +13,14 @@
     }
   };
 
+  var removeElement = function (element) {
+    element.remove();
+  };
+
   window.util = {
     isEscapeEvent: isEscapeEvent,
-    isEnterEvent: isEnterEvent
+    isEnterEvent: isEnterEvent,
+    removeElement: removeElement
   };
 
 })();
