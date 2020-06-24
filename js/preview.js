@@ -9,12 +9,12 @@
 
   // применение эффекта для изображения
 
-  var imageUpload = document.querySelector('.img-upload__overlay');
-  var slider = imageUpload.querySelector('.effect-level');
-  var effectLevelPin = imageUpload.querySelector('.effect-level__pin');
+  var imageUploadOverlay = document.querySelector('.img-upload__overlay');
+  var slider = imageUploadOverlay.querySelector('.effect-level');
+  var effectLevelPin = imageUploadOverlay.querySelector('.effect-level__pin');
   var effectLevelValue = slider.querySelector('.effect-level__value');
-  var effectsList = imageUpload.querySelector('.effects__list');
-  var imageUploadPreview = imageUpload.querySelector('.img-upload__preview img');
+  var effectsList = imageUploadOverlay.querySelector('.effects__list');
+  var imageUploadSetup = imageUploadOverlay.querySelector('.img-upload__preview img');
   var effectLevel;
 
   effectLevelPin.addEventListener('mousedown', function (evt) {
@@ -49,7 +49,7 @@
 
       effectLevel = Math.floor(effectLevelPin.offsetLeft / effectLevelPin.offsetParent.offsetWidth * 100); // уровень эффекта px/ длина полосы прокрутки пина px* 100
       effectLevelValue.defaultValue = effectLevel;
-      imageUpload.querySelector('.effect-level__depth').style.width = effectLevel + '%';
+      imageUploadOverlay.querySelector('.effect-level__depth').style.width = effectLevel + '%';
     };
 
     document.addEventListener('mousemove', onMouseMove);
@@ -65,12 +65,12 @@
 
   effectsList.addEventListener('click', function (evt) {
     if (evt.target && evt.target.matches('input[type="radio"]')) {
-      imageUploadPreview.className = '';
+      imageUploadSetup.className = '';
       var className = 'effects__preview--' + evt.target.value;
-      imageUploadPreview.classList.add(className);
+      imageUploadSetup.classList.add(className);
       effectLevelValue.defaultValue = 100;
       effectLevelPin.style.left = X_MAX + 'px';
-      imageUpload.querySelector('.effect-level__depth').style.width = 100 + '%';
+      imageUploadOverlay.querySelector('.effect-level__depth').style.width = 100 + '%';
       slider.classList.remove('hidden');
 
       if (evt.target && evt.target.matches('input[id="effect-none"]')) {
@@ -81,8 +81,8 @@
 
   window.preview = {
     slider: slider,
-
-    imageUpload: imageUpload
+    imageUploadSetup: imageUploadSetup,
+    imageUploadOverlay: imageUploadOverlay
   };
 
 })();
