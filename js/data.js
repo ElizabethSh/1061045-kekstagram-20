@@ -2,7 +2,9 @@
 
 (function () {
 
-  var MAX_AMOUNT = 25;
+  var userPhotos = [];
+
+  /* var MAX_AMOUNT = 25;
 
   var messages = [
     'Всё отлично!',
@@ -58,12 +60,13 @@
     }
   };
 
-  createData(); // TEMP
+  createData(); // TEMP*/
 
   window.data = {
-    photoDescriptions: photoDescriptions,
+    userPhotos: userPhotos
+    // photoDescriptions: photoDescriptions,
 
-    create: createData
+    // create: createData
   };
 
 })();
