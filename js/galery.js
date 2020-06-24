@@ -1,13 +1,14 @@
 'use strict';
 
 (function () {
-  var picturesList = document.querySelector('.pictures');
+  var main = document.querySelector('main');
+  var picturesList = main.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture').
                       content.querySelector('.picture');
 
   var errorTemplate = document.querySelector('#error').
                       content.querySelector('section');
-  var main = document.querySelector('main');
+
 
   var renderPicture = function (photo) {
     var picture = pictureTemplate.cloneNode(true);
@@ -17,24 +18,40 @@
     return picture;
   };
 
-  var successHandler = function (photos) {
+  var render = function (data) {
     var fragment = document.createDocumentFragment();
 
-    photos.forEach(function (it) {
+    data.forEach(function (it) {
       fragment.appendChild(renderPicture(it));
     });
 
     picturesList.appendChild(fragment);
   };
 
-  var errorLoadHandler = function () {
-    var errorMessage = errorTemplate.cloneNode(true);
-    errorMessage.querySelector('.error__title').textContent = 'Ошибка загрузки данных';
-    errorMessage.querySelector('.error__button').textContent = 'Попробовать снова';
-
-    main.appendChild(errorMessage);
+  var updatePhotos = function () { // в дальнейшем функция фильтрации
+    render(window.data.userPhotos);
   };
 
-  window.backend.load(successHandler, errorLoadHandler);
+  var successLoadHandler = function (photos) {
+    window.data.userPhotos = photos;
+    updatePhotos();
+  };
+
+
+  var errorLoadHandler = function () {
+    var errorWindow = errorTemplate.cloneNode(true);
+    errorWindow.querySelector('.error__title').textContent = 'Ошибка загрузки данных';
+    errorWindow.querySelector('.error__button').textContent = 'Попробовать снова';
+
+    main.appendChild(errorWindow);
+  };
+
+  window.backend.load(successLoadHandler, errorLoadHandler);
+
+  window.galery = {
+    main: main,
+
+    picturesList: picturesList
+  };
 
 })();
