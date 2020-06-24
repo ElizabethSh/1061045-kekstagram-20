@@ -4,50 +4,58 @@
 
   var MAX_HASHTAG_LENGTH = 20;
 
-  var hashtagInput = window.preview.imageUpload.querySelector('.text__hashtags');
   var form = document.querySelector('.img-upload__form');
-  var loading = document.querySelector('#upload-file');
-  var imageUploadCancel = document.querySelector('.img-upload__cancel');
+  var hashtagInput = form.querySelector('.text__hashtags');
+  var loading = form.querySelector('#upload-file');
+  var imageUploadCancel = form.querySelector('.img-upload__cancel');
+  var successMessageTemplate = document.querySelector('#success').
+                        content.querySelector('.success');
+  var errorMessageTemplate = document.querySelector('#error').
+                        content.querySelector('.error');
 
   // открытие окна загрузки
 
   var onDocumentEscPress = function (evt) {
     window.util.isEscapeEvent(evt, function () {
       evt.preventDefault();
-      closeUploadFile();
+      closeUploadForm();
     });
   };
 
-  var openUploadFile = function () {
-    window.preview.imageUpload.classList.remove('hidden');
+  var openUploadForm = function () {
+    window.preview.imageUploadOverlay.classList.remove('hidden');
     window.preview.slider.classList.add('hidden');
+    window.preview.imageUploadSetup.className = ''; // задается пустой класс. Некрасиво
     document.querySelector('body').classList.add('modal-open');
 
     document.addEventListener('keydown', onDocumentEscPress);
     imageUploadCancel.addEventListener('click', onCloseButtonClick);
     loading.removeEventListener('change', onUploadClick);
+    window.picture.removeListeners();
   };
 
   var onUploadClick = function () {
-    openUploadFile();
+    openUploadForm();
   };
 
   loading.addEventListener('change', onUploadClick);
 
   // закрытие окна загрузки
 
-  var closeUploadFile = function () {
-    window.preview.imageUpload.classList.add('hidden');
+  var closeUploadForm = function () {
+    window.preview.imageUploadOverlay.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');
-    loading.value = '';
+    // loading.value = '';  // проверить нужно ли это
+    form.reset();
 
     loading.addEventListener('change', onUploadClick);
     document.removeEventListener('keydown', onDocumentEscPress);
     imageUploadCancel.removeEventListener('click', onCloseButtonClick);
+    window.picture.addListeners();
   };
 
   var onCloseButtonClick = function () {
-    closeUploadFile();
+    closeUploadForm();
   };
 
   // Валидация хеш-тегов
@@ -90,20 +98,80 @@
 
   hashtagInput.addEventListener('keydown', onHashtagFieldEscPress);
 
-  // не работает как нужно!
-  var errorHandler = function () {
 
+  var successHandler = function () {
+    closeUploadForm();
+    var successMessage = successMessageTemplate.cloneNode(true);
+    window.galery.main.appendChild(successMessage);
+
+    var successButton = document.querySelector('.success__button');
+
+    var closeSuccessMessage = function () {
+      window.util.removeElement(successMessage);
+      successButton.removeEventListener('click', onSuccessButtonClick);
+      document.removeEventListener('keydown', onSuccessMessageEscPress);
+      document.removeEventListener('click', onSuccessMessageClick);
+    };
+
+    var onSuccessButtonClick = function () {
+      closeSuccessMessage();
+    };
+
+    var onSuccessMessageEscPress = function (evt) {
+      window.util.isEscapeEvent(evt, closeSuccessMessage);
+    };
+
+    var onSuccessMessageClick = function () {
+      closeSuccessMessage();
+    };
+
+    successButton.addEventListener('click', onSuccessButtonClick);
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+    document.addEventListener('click', onSuccessMessageClick);
   };
 
-  form.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(form), function () {
-      closeUploadFile();
-    }, errorHandler);
+
+  var errorHandler = function () {
+    closeUploadForm();
+    var errorMessage = errorMessageTemplate.cloneNode(true);
+    window.galery.main.appendChild(errorMessage);
+
+    var errorButton = errorMessage.querySelector('.error__button');
+
+    var closeErrorMessage = function () {
+      window.util.removeElement(errorMessage);
+
+      errorButton.removeEventListener('click', onErrorButtonClick);
+      document.removeEventListener('keydown', onErrorMessageEscPress);
+      document.removeEventListener('click', onErrorMessageClick);
+    };
+
+    var onErrorButtonClick = function () {
+      closeErrorMessage();
+    };
+
+    var onErrorMessageEscPress = function (evt) {
+      window.util.isEscapeEvent(evt, closeErrorMessage);
+    };
+
+    var onErrorMessageClick = function () {
+      closeErrorMessage();
+    };
+
+    errorButton.addEventListener('click', onErrorButtonClick);
+    document.addEventListener('keydown', onErrorMessageEscPress);
+    document.addEventListener('click', onErrorMessageClick);
+  };
+
+  var submitHandler = function (evt) {
+    window.backend.upload(new FormData(form), successHandler, errorHandler);
     evt.preventDefault();
     // if (!hashtagInput.validity.valid) {
     //   evt.preventDefault();
     // }
-  });
+  };
+
+  form.addEventListener('submit', submitHandler);
 
 
 })();
