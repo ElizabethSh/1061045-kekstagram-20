@@ -3,6 +3,7 @@
 (function () {
   var URL_GET = 'https://javascript.pages.academy/kekstagram/data';
   var URL_POST = 'https://javascript.pages.academy/kekstagram';
+  var TIMEOUT = 10000;
 
   var setup = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -15,6 +16,11 @@
         onError(xhr.status);
       }
     });
+
+    xhr.addEventListener('error', onError);
+
+    xhr.addEventListener('timeout', onError);
+    xhr.timeout = TIMEOUT;
     return xhr;
   };
 
