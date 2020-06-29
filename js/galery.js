@@ -10,9 +10,11 @@
                       content.querySelector('section');
 
 
-  var renderPicture = function (photo) {
+  var renderPicture = function (photo, index) {
     var picture = pictureTemplate.cloneNode(true);
     picture.querySelector('.picture__img').src = photo.url;
+    picture.querySelector('.picture__img').dataset.key = index;
+    picture.dataset.key = index;
     picture.querySelector('.picture__comments').textContent = photo.comments.length;
     picture.querySelector('.picture__likes').textContent = photo.likes;
     return picture;
@@ -21,20 +23,21 @@
   var render = function (data) {
     var fragment = document.createDocumentFragment();
 
-    data.forEach(function (it) {
-      fragment.appendChild(renderPicture(it));
-    });
+    for (var i = 0; i < data.length; i++) { // попробовать переписать на forEach
+      fragment.appendChild(renderPicture(data[i], i));
+    }
 
     picturesList.appendChild(fragment);
   };
 
-  var updatePhotos = function () { // в дальнейшем функция фильтрации
+  var updatePhotos = function () {
     render(window.data.userPhotos);
   };
 
   var successLoadHandler = function (photos) {
     window.data.userPhotos = photos;
     updatePhotos();
+    window.picture.addListeners();
   };
 
 
