@@ -30,13 +30,11 @@
     picturesList.appendChild(fragment);
   };
 
-  var updatePhotos = function () {
-    render(window.data.userPhotos);
-  };
-
   var successLoadHandler = function (photos) {
     window.data.userPhotos = photos;
-    updatePhotos();
+    window.data.picturesFilter.classList.remove('img-filters--inactive');
+    // updatePhotos();
+    render(window.data.userPhotos);
     window.picture.addListeners();
   };
 
@@ -53,8 +51,10 @@
 
   window.galery = {
     main: main,
+    picturesList: picturesList,
 
-    picturesList: picturesList
+    render: render
+
   };
 
 })();
