@@ -10,7 +10,7 @@
                       content.querySelector('section');
 
 
-  var renderPicture = function (photo, index) {
+  var renderSmallPicture = function (photo, index) {
     var picture = pictureTemplate.cloneNode(true);
     picture.querySelector('.picture__img').src = photo.url;
     picture.querySelector('.picture__img').dataset.key = index;
@@ -24,7 +24,7 @@
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < data.length; i++) { // попробовать переписать на forEach
-      fragment.appendChild(renderPicture(data[i], i));
+      fragment.appendChild(renderSmallPicture(data[i], i));
     }
 
     picturesList.appendChild(fragment);
@@ -32,9 +32,9 @@
 
   var successLoadHandler = function (photos) {
     window.data.userPhotos = photos;
-    window.data.picturesFilter.classList.remove('img-filters--inactive');
     // updatePhotos();
     render(window.data.userPhotos);
+    window.data.picturesFilter.classList.remove('img-filters--inactive');
     window.picture.addListeners();
   };
 
