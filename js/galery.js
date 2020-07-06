@@ -20,7 +20,7 @@
     return picture;
   };
 
-  var render = function (data) {
+  var createSmallPhotos = function (data) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < data.length; i++) { // попробовать переписать на forEach
@@ -30,12 +30,23 @@
     picturesList.appendChild(fragment);
   };
 
+  var updatePhotos = function (data) {
+    createSmallPhotos(data);
+  };
+
   var successLoadHandler = function (photos) {
     window.data.userPhotos = photos;
     // updatePhotos();
-    render(window.data.userPhotos);
+    updatePhotos(window.data.userPhotos); // рисуем миниатюры
+
+    // показываем кнопки фильтрации
     window.data.picturesFilter.classList.remove('img-filters--inactive');
+
+    // добавляем обработчик на контейнер с фотографиями
     window.picture.addListeners();
+
+    // добавляем обработчики на кнопки сортировки
+    window.data.addListeners();
   };
 
 
@@ -53,7 +64,8 @@
     main: main,
     picturesList: picturesList,
 
-    render: render
+    createSmallPhotos: createSmallPhotos,
+    updatePhotos: updatePhotos
 
   };
 
