@@ -34,7 +34,6 @@
     }
 
     // сортировка фотографий в зависимости от нажатой кнопки сортировки
-
     if (evt.target && evt.target.matches('button[id = "filter-default"]')) {
       filteredPhotos = window.data.userPhotos;
     } else if (evt.target && evt.target.matches('button[id = "filter-random"]')) {
@@ -55,15 +54,14 @@
       });
       filteredPhotos = popularPhotos;
     }
-
-    updatePhotos(filteredPhotos);
+    window.galery.updatePhotos(filteredPhotos);
   };
 
-  var onFilterButtonClick = function (evt) {
+  var onFilterButtonClick = window.debounce(function (evt) {
     filterPhoto(evt);
-  };
+  });
 
-  picturesFilterForm.addEventListener('click', onFilterButtonClick);
+  // picturesFilterForm.addEventListener('click', onFilterButtonClick);
 
   var removePictures = function () {
     var pictures = document.querySelectorAll('.picture');
@@ -73,9 +71,6 @@
     });
   };
 
-  var updatePhotos = function (data) {
-    window.galery.render(data);
-  };
 
   var addListeners = function () {
     picturesFilterForm.addEventListener('click', onFilterButtonClick);
@@ -92,9 +87,7 @@
 
     addListeners: addListeners,
     removeListeners: removeListeners,
-    updatePhotos: updatePhotos
 
-    // updatePhotos: updatePhotos
   };
 
 })();
