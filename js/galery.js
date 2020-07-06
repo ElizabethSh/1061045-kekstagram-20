@@ -10,7 +10,7 @@
                       content.querySelector('section');
 
 
-  var renderPicture = function (photo, index) {
+  var renderSmallPicture = function (photo, index) {
     var picture = pictureTemplate.cloneNode(true);
     picture.querySelector('.picture__img').src = photo.url;
     picture.querySelector('.picture__img').dataset.key = index;
@@ -20,24 +20,33 @@
     return picture;
   };
 
-  var render = function (data) {
+  var createSmallPhotos = function (data) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < data.length; i++) { // попробовать переписать на forEach
-      fragment.appendChild(renderPicture(data[i], i));
+      fragment.appendChild(renderSmallPicture(data[i], i));
     }
 
     picturesList.appendChild(fragment);
   };
 
-  var updatePhotos = function () {
-    render(window.data.userPhotos);
+  var updatePhotos = function (data) {
+    createSmallPhotos(data);
   };
 
   var successLoadHandler = function (photos) {
     window.data.userPhotos = photos;
-    updatePhotos();
+    // updatePhotos();
+    updatePhotos(window.data.userPhotos); // рисуем миниатюры
+
+    // показываем кнопки фильтрации
+    window.data.picturesFilter.classList.remove('img-filters--inactive');
+
+    // добавляем обработчик на контейнер с фотографиями
     window.picture.addListeners();
+
+    // добавляем обработчики на кнопки сортировки
+    window.data.addListeners();
   };
 
 
@@ -53,8 +62,11 @@
 
   window.galery = {
     main: main,
+    picturesList: picturesList,
 
-    picturesList: picturesList
+    createSmallPhotos: createSmallPhotos,
+    updatePhotos: updatePhotos
+
   };
 
 })();
